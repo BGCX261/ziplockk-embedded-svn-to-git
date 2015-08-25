@@ -1,0 +1,5 @@
+#/bin/bash
+
+rm -rf frames/*.png overlay.mp4
+./generator
+#avconv -r 25 -i frames/frame%08d.png -b:v 1000k overlay.mp4

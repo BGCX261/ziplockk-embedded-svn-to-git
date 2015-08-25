@@ -1,0 +1,7 @@
+#!/bin/bash
+
+while true
+do
+	avrdude -v -p atmega8 -c avrusb500 -U flash:v:tempmonitor.hex
+done
+

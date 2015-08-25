@@ -1,0 +1,239 @@
+
+mr162.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         00000000  00800100  0000013a  000001ce  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         0000013a  00000000  00000000  00000094  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .bss          00000000  00800100  0000013a  000001ce  2**0
+                  ALLOC
+  3 .noinit       00000000  00800100  00800100  000001ce  2**0
+                  CONTENTS
+  4 .eeprom       00000000  00810000  00810000  000001ce  2**0
+                  CONTENTS
+  5 .stab         0000036c  00000000  00000000  000001d0  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  6 .stabstr      00000084  00000000  00000000  0000053c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_aranges 00000014  00000000  00000000  000005c0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_pubnames 00000067  00000000  00000000  000005d4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_info   00000173  00000000  00000000  0000063b  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_abbrev 00000098  00000000  00000000  000007ae  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_line   0000019a  00000000  00000000  00000846  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_str    000000bd  00000000  00000000  000009e0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 38 00 	jmp	0x70 <__ctors_end>
+   4:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+   8:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+   c:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  10:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  14:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  18:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  1c:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  20:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  24:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  28:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  2c:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  30:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  34:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  38:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  3c:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  40:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  44:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  48:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  4c:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  50:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  54:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  58:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  5c:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  60:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  64:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  68:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+  6c:	0c 94 53 00 	jmp	0xa6 <__bad_interrupt>
+
+00000070 <__ctors_end>:
+  70:	11 24       	eor	r1, r1
+  72:	1f be       	out	0x3f, r1	; 63
+  74:	cf ef       	ldi	r28, 0xFF	; 255
+  76:	d4 e0       	ldi	r29, 0x04	; 4
+  78:	de bf       	out	0x3e, r29	; 62
+  7a:	cd bf       	out	0x3d, r28	; 61
+
+0000007c <__do_copy_data>:
+  7c:	11 e0       	ldi	r17, 0x01	; 1
+  7e:	a0 e0       	ldi	r26, 0x00	; 0
+  80:	b1 e0       	ldi	r27, 0x01	; 1
+  82:	ea e3       	ldi	r30, 0x3A	; 58
+  84:	f1 e0       	ldi	r31, 0x01	; 1
+  86:	02 c0       	rjmp	.+4      	; 0x8c <.do_copy_data_start>
+
+00000088 <.do_copy_data_loop>:
+  88:	05 90       	lpm	r0, Z+
+  8a:	0d 92       	st	X+, r0
+
+0000008c <.do_copy_data_start>:
+  8c:	a0 30       	cpi	r26, 0x00	; 0
+  8e:	b1 07       	cpc	r27, r17
+  90:	d9 f7       	brne	.-10     	; 0x88 <.do_copy_data_loop>
+
+00000092 <__do_clear_bss>:
+  92:	11 e0       	ldi	r17, 0x01	; 1
+  94:	a0 e0       	ldi	r26, 0x00	; 0
+  96:	b1 e0       	ldi	r27, 0x01	; 1
+  98:	01 c0       	rjmp	.+2      	; 0x9c <.do_clear_bss_start>
+
+0000009a <.do_clear_bss_loop>:
+  9a:	1d 92       	st	X+, r1
+
+0000009c <.do_clear_bss_start>:
+  9c:	a0 30       	cpi	r26, 0x00	; 0
+  9e:	b1 07       	cpc	r27, r17
+  a0:	e1 f7       	brne	.-8      	; 0x9a <.do_clear_bss_loop>
+  a2:	0c 94 88 00 	jmp	0x110 <main>
+
+000000a6 <__bad_interrupt>:
+  a6:	0c 94 00 00 	jmp	0x0 <__vectors>
+
+000000aa <delay_1ms>:
+	word j;
+	while(i--)
+	{
+		j=11415;   // 8Mhz Exteranl Crystal(CKSEL3..0 = 1,1,1,1)
+		while(j--);
+  aa:	01 97       	sbiw	r24, 0x01	; 1
+  ac:	2f ef       	ldi	r18, 0xFF	; 255
+  ae:	8f 3f       	cpi	r24, 0xFF	; 255
+  b0:	92 07       	cpc	r25, r18
+  b2:	49 f0       	breq	.+18     	; 0xc6 <delay_1ms+0x1c>
+  b4:	27 e9       	ldi	r18, 0x97	; 151
+  b6:	3c e2       	ldi	r19, 0x2C	; 44
+  b8:	28 50       	subi	r18, 0x08	; 8
+  ba:	30 40       	sbci	r19, 0x00	; 0
+  bc:	4f ef       	ldi	r20, 0xFF	; 255
+  be:	2f 3f       	cpi	r18, 0xFF	; 255
+  c0:	34 07       	cpc	r19, r20
+  c2:	d1 f7       	brne	.-12     	; 0xb8 <delay_1ms+0xe>
+  c4:	f2 cf       	rjmp	.-28     	; 0xaa <delay_1ms>
+  c6:	08 95       	ret
+
+000000c8 <ports_init>:
+	}
+}
+
+void ports_init(void)
+{
+	DDRA = 0xff;	//Configures PORTA as an output port.
+  c8:	8f ef       	ldi	r24, 0xFF	; 255
+  ca:	8a bb       	out	0x1a, r24	; 26
+	DDRB = 0xff;	//Configures PORTB as an output port.
+  cc:	87 bb       	out	0x17, r24	; 23
+	DDRC = 0xff;    //Configures PORTC as an output port.
+  ce:	84 bb       	out	0x14, r24	; 20
+	DDRD = 0xff;	//Configures PORTD as an output port.
+  d0:	81 bb       	out	0x11, r24	; 17
+	DDRE = 0xff;	//Configures PORTE as an output port.
+  d2:	86 b9       	out	0x06, r24	; 6
+  d4:	08 95       	ret
+
+000000d6 <ports_set>:
+}
+
+void ports_set(void)
+{
+	PORTA = 0xff;	//Outputs 0xff to PORTA. 
+  d6:	8f ef       	ldi	r24, 0xFF	; 255
+  d8:	8b bb       	out	0x1b, r24	; 27
+	PORTB = 0xff;	//Outputs 0xff to PORTB.
+  da:	88 bb       	out	0x18, r24	; 24
+	PORTC = 0xff;	//Outputs 0xff to PORTC.
+  dc:	85 bb       	out	0x15, r24	; 21
+	PORTD = 0xff;	//Outputs 0xff to PORTD.
+  de:	82 bb       	out	0x12, r24	; 18
+	PORTE = 0xff;	//Outputs 0xff to PORTE.
+  e0:	87 b9       	out	0x07, r24	; 7
+  e2:	08 95       	ret
+
+000000e4 <ports_clear>:
+}
+
+void ports_clear(void)
+{
+	PORTA = 0;	//Outputs 0 to PORTA. 
+  e4:	1b ba       	out	0x1b, r1	; 27
+	PORTB = 0;	//Outputs 0 to PORTB.
+  e6:	18 ba       	out	0x18, r1	; 24
+	PORTC = 0;	//Outputs 0 to PORTC.
+  e8:	15 ba       	out	0x15, r1	; 21
+	PORTD = 0;	//Outputs 0 to PORTD.
+  ea:	12 ba       	out	0x12, r1	; 18
+	PORTE = 0;	//Outputs 0 to PORTE.
+  ec:	17 b8       	out	0x07, r1	; 7
+  ee:	08 95       	ret
+
+000000f0 <start_signal>:
+}
+
+void start_signal(void)
+{
+  f0:	cf 93       	push	r28
+	byte c;
+	for(c=5; c>0; --c)
+  f2:	c5 e0       	ldi	r28, 0x05	; 5
+	{
+		PORTB &= ~_BV(LED1);  // Bit clear.= Turn On LED1.		
+  f4:	c5 98       	cbi	0x18, 5	; 24
+		delay_1ms(20);        // 0.2 sec delay.
+  f6:	84 e1       	ldi	r24, 0x14	; 20
+  f8:	90 e0       	ldi	r25, 0x00	; 0
+  fa:	0e 94 55 00 	call	0xaa <delay_1ms>
+		PORTB |= _BV(LED1);   // Bit set.= Turn Off LED1.
+  fe:	c5 9a       	sbi	0x18, 5	; 24
+		delay_1ms(20);        // 0.2 sec delay.
+ 100:	84 e1       	ldi	r24, 0x14	; 20
+ 102:	90 e0       	ldi	r25, 0x00	; 0
+ 104:	0e 94 55 00 	call	0xaa <delay_1ms>
+ 108:	c1 50       	subi	r28, 0x01	; 1
+ 10a:	a1 f7       	brne	.-24     	; 0xf4 <start_signal+0x4>
+ 10c:	cf 91       	pop	r28
+ 10e:	08 95       	ret
+
+00000110 <main>:
+	}	
+}
+
+int main(void)
+{
+ 110:	cf ef       	ldi	r28, 0xFF	; 255
+ 112:	d4 e0       	ldi	r29, 0x04	; 4
+ 114:	de bf       	out	0x3e, r29	; 62
+ 116:	cd bf       	out	0x3d, r28	; 61
+	ports_init();	//Ports Initialization
+ 118:	0e 94 64 00 	call	0xc8 <ports_init>
+	start_signal(); // Toggle LED1 five times.
+ 11c:	0e 94 78 00 	call	0xf0 <start_signal>
+
+	while(1)      // Keeps toggling all ports every 0.5 sec.
+	{
+		ports_set();
+ 120:	0e 94 6b 00 	call	0xd6 <ports_set>
+		delay_1ms(200);
+ 124:	88 ec       	ldi	r24, 0xC8	; 200
+ 126:	90 e0       	ldi	r25, 0x00	; 0
+ 128:	0e 94 55 00 	call	0xaa <delay_1ms>
+		ports_clear();
+ 12c:	0e 94 72 00 	call	0xe4 <ports_clear>
+		delay_1ms(200);
+ 130:	88 ec       	ldi	r24, 0xC8	; 200
+ 132:	90 e0       	ldi	r25, 0x00	; 0
+ 134:	0e 94 55 00 	call	0xaa <delay_1ms>
+ 138:	f3 cf       	rjmp	.-26     	; 0x120 <main+0x10>

@@ -1,0 +1,5 @@
+extract audio from video
+ffmpeg -i FD0P3596.m4v -ab 160k -ac 2 -ar 44100 -vn audio.mp3
+
+re-code video
+avconv -r 25 -i images/output%08d.png -b:v 1000k -i /home/fergusd/Videos/audio.mp3 -shortest compositortest.mp4

@@ -1,0 +1,277 @@
+Archive member included because of file (symbol)
+
+D:/WinAVR/lib/gcc/avr/3.4.6\libgcc.a(_copy_data.o)
+                              tinytest.o (__do_copy_data)
+D:/WinAVR/lib/gcc/avr/3.4.6\libgcc.a(_clear_bss.o)
+                              tinytest.o (__do_clear_bss)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+text             0x00000000         0x00002000         xr
+data             0x00800060         0x0000ffa0         rw !x
+eeprom           0x00810000         0x00010000         rw !x
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD d:/WinAVR/bin/../lib/gcc/avr/3.4.6/../../../../avr/lib/crttn26.o
+LOAD tinytest.o
+LOAD D:/WinAVR/lib/gcc/avr/3.4.6\libgcc.a
+LOAD d:/WinAVR/bin/../lib/gcc/avr/3.4.6/../../../../avr/lib\libc.a
+LOAD D:/WinAVR/lib/gcc/avr/3.4.6\libgcc.a
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.text
+ *(.rel.text)
+ *(.rel.text.*)
+ *(.rel.gnu.linkonce.t*)
+
+.rela.text
+ *(.rela.text)
+ *(.rela.text.*)
+ *(.rela.gnu.linkonce.t*)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.rodata
+ *(.rel.rodata)
+ *(.rel.rodata.*)
+ *(.rel.gnu.linkonce.r*)
+
+.rela.rodata
+ *(.rela.rodata)
+ *(.rela.rodata.*)
+ *(.rela.gnu.linkonce.r*)
+
+.rel.data
+ *(.rel.data)
+ *(.rel.data.*)
+ *(.rel.gnu.linkonce.d*)
+
+.rela.data
+ *(.rela.data)
+ *(.rela.data.*)
+ *(.rela.gnu.linkonce.d*)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.bss
+ *(.rel.bss)
+
+.rela.bss
+ *(.rela.bss)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.text           0x00000000       0xdc
+ *(.vectors)
+ .vectors       0x00000000       0x18 d:/WinAVR/bin/../lib/gcc/avr/3.4.6/../../../../avr/lib/crttn26.o
+                0x00000000                __vectors
+                0x00000000                __vector_default
+                0x00000018                __ctors_start = .
+ *(.ctors)
+                0x00000018                __ctors_end = .
+                0x00000018                __dtors_start = .
+ *(.dtors)
+                0x00000018                __dtors_end = .
+ *(.progmem.gcc*)
+ *(.progmem*)
+                0x00000018                . = ALIGN (0x2)
+ *(.init0)
+ *(.init1)
+ *(.init2)
+ .init2         0x00000018        0x8 d:/WinAVR/bin/../lib/gcc/avr/3.4.6/../../../../avr/lib/crttn26.o
+ *(.init3)
+ *(.init4)
+ .init4         0x00000020       0x18 D:/WinAVR/lib/gcc/avr/3.4.6\libgcc.a(_copy_data.o)
+                0x00000020                __do_copy_data
+ .init4         0x00000038       0x10 D:/WinAVR/lib/gcc/avr/3.4.6\libgcc.a(_clear_bss.o)
+                0x00000038                __do_clear_bss
+ *(.init5)
+ *(.init6)
+ *(.init7)
+ *(.init8)
+ *(.init9)
+ .init9         0x00000048        0x2 d:/WinAVR/bin/../lib/gcc/avr/3.4.6/../../../../avr/lib/crttn26.o
+ *(.text)
+ .text          0x0000004a        0x2 d:/WinAVR/bin/../lib/gcc/avr/3.4.6/../../../../avr/lib/crttn26.o
+                0x0000004a                __bad_interrupt
+                0x0000004a                __vector_3
+                0x0000004a                __vector_11
+                0x0000004a                __vector_7
+                0x0000004a                __vector_5
+                0x0000004a                __vector_4
+                0x0000004a                __vector_9
+                0x0000004a                __vector_2
+                0x0000004a                __vector_8
+                0x0000004a                __vector_10
+ .text          0x0000004c       0x90 tinytest.o
+                0x0000004c                __vector_1
+                0x00000064                __vector_6
+                0x000000ba                main
+                0x000000dc                . = ALIGN (0x2)
+ *(.text.*)
+                0x000000dc                . = ALIGN (0x2)
+ *(.fini9)
+ *(.fini8)
+ *(.fini7)
+ *(.fini6)
+ *(.fini5)
+ *(.fini4)
+ *(.fini3)
+ *(.fini2)
+ *(.fini1)
+ *(.fini0)
+                0x000000dc                _etext = .
+
+.data           0x00800060        0x0 load address 0x000000dc
+                0x00800060                PROVIDE (__data_start, .)
+ *(.data)
+ *(.gnu.linkonce.d*)
+                0x00800060                . = ALIGN (0x2)
+                0x00800060                _edata = .
+                0x00800060                PROVIDE (__data_end, .)
+
+.bss            0x00800060        0x2
+                0x00800060                PROVIDE (__bss_start, .)
+ *(.bss)
+ .bss           0x00800060        0x2 tinytest.o
+                0x00800061                state
+                0x00800060                failcount
+ *(COMMON)
+                0x00800062                PROVIDE (__bss_end, .)
+                0x000000dc                __data_load_start = LOADADDR (.data)
+                0x000000dc                __data_load_end = (__data_load_start + SIZEOF (.data))
+
+.noinit         0x00800062        0x0
+                0x00800062                PROVIDE (__noinit_start, .)
+ *(.noinit*)
+                0x00800062                PROVIDE (__noinit_end, .)
+                0x00800062                _end = .
+                0x00800062                PROVIDE (__heap_start, .)
+
+.eeprom         0x00810000        0x0
+ *(.eeprom*)
+                0x00810000                __eeprom_end = .
+
+.stab           0x00000000      0x354
+ *(.stab)
+ .stab          0x00000000      0x354 d:/WinAVR/bin/../lib/gcc/avr/3.4.6/../../../../avr/lib/crttn26.o
+
+.stabstr        0x00000000       0x84
+ *(.stabstr)
+ .stabstr       0x00000000       0x84 d:/WinAVR/bin/../lib/gcc/avr/3.4.6/../../../../avr/lib/crttn26.o
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment
+ *(.comment)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x00000000       0x14
+ *(.debug_aranges)
+ .debug_aranges
+                0x00000000       0x14 tinytest.o
+
+.debug_pubnames
+                0x00000000       0x51
+ *(.debug_pubnames)
+ .debug_pubnames
+                0x00000000       0x51 tinytest.o
+
+.debug_info     0x00000000      0x116
+ *(.debug_info)
+ .debug_info    0x00000000      0x116 tinytest.o
+ *(.gnu.linkonce.wi.*)
+
+.debug_abbrev   0x00000000       0x7b
+ *(.debug_abbrev)
+ .debug_abbrev  0x00000000       0x7b tinytest.o
+
+.debug_line     0x00000000      0x145
+ *(.debug_line)
+ .debug_line    0x00000000      0x145 tinytest.o
+
+.debug_frame
+ *(.debug_frame)
+
+.debug_str      0x00000000       0xa8
+ *(.debug_str)
+ .debug_str     0x00000000       0xa8 tinytest.o
+                                0x100 (size before relaxing)
+
+.debug_loc
+ *(.debug_loc)
+
+.debug_macinfo
+ *(.debug_macinfo)
+OUTPUT(tinytest.elf elf32-avr)

@@ -1,0 +1,495 @@
+
+gearpos.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000254  00000000  00000000  000000b4  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         0000000c  00800060  00000254  00000308  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000074  0080006c  0080006c  00000314  2**0
+                  ALLOC
+  3 .eeprom       0000000e  00810000  00810000  00000314  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  4 .stab         000010bc  00000000  00000000  00000324  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  5 .stabstr      00000c46  00000000  00000000  000013e0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0b c0       	rjmp	.+22     	; 0x18 <__ctors_end>
+   2:	24 c0       	rjmp	.+72     	; 0x4c <__bad_interrupt>
+   4:	23 c0       	rjmp	.+70     	; 0x4c <__bad_interrupt>
+   6:	22 c0       	rjmp	.+68     	; 0x4c <__bad_interrupt>
+   8:	21 c0       	rjmp	.+66     	; 0x4c <__bad_interrupt>
+   a:	20 c0       	rjmp	.+64     	; 0x4c <__bad_interrupt>
+   c:	1f c0       	rjmp	.+62     	; 0x4c <__bad_interrupt>
+   e:	1e c0       	rjmp	.+60     	; 0x4c <__bad_interrupt>
+  10:	1d c0       	rjmp	.+58     	; 0x4c <__bad_interrupt>
+  12:	1c c0       	rjmp	.+56     	; 0x4c <__bad_interrupt>
+  14:	1b c0       	rjmp	.+54     	; 0x4c <__bad_interrupt>
+  16:	89 c0       	rjmp	.+274    	; 0x12a <__vector_11>
+
+00000018 <__ctors_end>:
+  18:	11 24       	eor	r1, r1
+  1a:	1f be       	out	0x3f, r1	; 63
+  1c:	cf ed       	ldi	r28, 0xDF	; 223
+  1e:	cd bf       	out	0x3d, r28	; 61
+
+00000020 <__do_copy_data>:
+  20:	10 e0       	ldi	r17, 0x00	; 0
+  22:	a0 e6       	ldi	r26, 0x60	; 96
+  24:	b0 e0       	ldi	r27, 0x00	; 0
+  26:	e4 e5       	ldi	r30, 0x54	; 84
+  28:	f2 e0       	ldi	r31, 0x02	; 2
+  2a:	03 c0       	rjmp	.+6      	; 0x32 <__do_copy_data+0x12>
+  2c:	c8 95       	lpm
+  2e:	31 96       	adiw	r30, 0x01	; 1
+  30:	0d 92       	st	X+, r0
+  32:	ac 36       	cpi	r26, 0x6C	; 108
+  34:	b1 07       	cpc	r27, r17
+  36:	d1 f7       	brne	.-12     	; 0x2c <__do_copy_data+0xc>
+
+00000038 <__do_clear_bss>:
+  38:	10 e0       	ldi	r17, 0x00	; 0
+  3a:	ac e6       	ldi	r26, 0x6C	; 108
+  3c:	b0 e0       	ldi	r27, 0x00	; 0
+  3e:	01 c0       	rjmp	.+2      	; 0x42 <.do_clear_bss_start>
+
+00000040 <.do_clear_bss_loop>:
+  40:	1d 92       	st	X+, r1
+
+00000042 <.do_clear_bss_start>:
+  42:	a0 3e       	cpi	r26, 0xE0	; 224
+  44:	b1 07       	cpc	r27, r17
+  46:	e1 f7       	brne	.-8      	; 0x40 <.do_clear_bss_loop>
+  48:	33 d0       	rcall	.+102    	; 0xb0 <main>
+  4a:	02 c1       	rjmp	.+516    	; 0x250 <_exit>
+
+0000004c <__bad_interrupt>:
+  4c:	d9 cf       	rjmp	.-78     	; 0x0 <__vectors>
+
+0000004e <calculateGearPosition>:
+uint8_t test[] __attribute__ ((section (".eeprom"))) = "Fergus Duncan";
+
+uint8_t displayValue[] = {ZERO,ONE,TWO,THREE,FOUR,FIVE,SIX,SEVEN,EIGHT,NINE,OFF};
+
+uint8_t calculateGearPosition(uint16_t analog_reading)
+{
+  4e:	28 2f       	mov	r18, r24
+  50:	39 2f       	mov	r19, r25
+	uint8_t retVal=10;
+
+	if((analog_reading>G_1_LOW)&&(analog_reading<G_1_HIGH))
+  52:	85 5c       	subi	r24, 0xC5	; 197
+  54:	90 40       	sbci	r25, 0x00	; 0
+  56:	8b 32       	cpi	r24, 0x2B	; 43
+  58:	91 05       	cpc	r25, r1
+  5a:	40 f1       	brcs	.+80     	; 0xac <calculateGearPosition+0x5e>
+
+uint8_t displayValue[] = {ZERO,ONE,TWO,THREE,FOUR,FIVE,SIX,SEVEN,EIGHT,NINE,OFF};
+
+uint8_t calculateGearPosition(uint16_t analog_reading)
+{
+	uint8_t retVal=10;
+  5c:	8a e0       	ldi	r24, 0x0A	; 10
+	if((analog_reading>G_1_LOW)&&(analog_reading<G_1_HIGH))
+	{
+		retVal=1;
+	}
+
+	if((analog_reading>G_2_LOW)&&(analog_reading<G_2_HIGH))
+  5e:	42 2f       	mov	r20, r18
+  60:	53 2f       	mov	r21, r19
+  62:	44 5f       	subi	r20, 0xF4	; 244
+  64:	50 40       	sbci	r21, 0x00	; 0
+  66:	44 35       	cpi	r20, 0x54	; 84
+  68:	51 05       	cpc	r21, r1
+  6a:	08 f4       	brcc	.+2      	; 0x6e <calculateGearPosition+0x20>
+	{
+		retVal=2;
+  6c:	82 e0       	ldi	r24, 0x02	; 2
+	}
+
+	if((analog_reading>G_3_LOW)&&(analog_reading<G_3_HIGH))
+  6e:	42 2f       	mov	r20, r18
+  70:	53 2f       	mov	r21, r19
+  72:	4c 57       	subi	r20, 0x7C	; 124
+  74:	51 40       	sbci	r21, 0x01	; 1
+  76:	42 37       	cpi	r20, 0x72	; 114
+  78:	51 05       	cpc	r21, r1
+  7a:	08 f4       	brcc	.+2      	; 0x7e <calculateGearPosition+0x30>
+	{
+		retVal=3;
+  7c:	83 e0       	ldi	r24, 0x03	; 3
+	}
+
+	if((analog_reading>G_4_LOW)&&(analog_reading<G_4_HIGH))
+  7e:	42 2f       	mov	r20, r18
+  80:	53 2f       	mov	r21, r19
+  82:	4c 5f       	subi	r20, 0xFC	; 252
+  84:	51 40       	sbci	r21, 0x01	; 1
+  86:	4c 38       	cpi	r20, 0x8C	; 140
+  88:	51 05       	cpc	r21, r1
+  8a:	08 f4       	brcc	.+2      	; 0x8e <calculateGearPosition+0x40>
+	{
+		retVal=4;
+  8c:	84 e0       	ldi	r24, 0x04	; 4
+	}
+
+	if((analog_reading>G_5_LOW)&&(analog_reading<G_5_HIGH))
+  8e:	42 2f       	mov	r20, r18
+  90:	53 2f       	mov	r21, r19
+  92:	4b 5e       	subi	r20, 0xEB	; 235
+  94:	52 40       	sbci	r21, 0x02	; 2
+  96:	4d 37       	cpi	r20, 0x7D	; 125
+  98:	51 05       	cpc	r21, r1
+  9a:	08 f4       	brcc	.+2      	; 0x9e <calculateGearPosition+0x50>
+	{
+		retVal=5;
+  9c:	85 e0       	ldi	r24, 0x05	; 5
+	}
+
+	if((analog_reading>G_6_LOW)&&(analog_reading<G_6_HIGH))
+  9e:	21 57       	subi	r18, 0x71	; 113
+  a0:	33 40       	sbci	r19, 0x03	; 3
+  a2:	23 34       	cpi	r18, 0x43	; 67
+  a4:	31 05       	cpc	r19, r1
+  a6:	08 f4       	brcc	.+2      	; 0xaa <calculateGearPosition+0x5c>
+	{
+		retVal=6;
+  a8:	86 e0       	ldi	r24, 0x06	; 6
+	}
+
+	return retVal;
+}
+  aa:	08 95       	ret
+{
+	uint8_t retVal=10;
+
+	if((analog_reading>G_1_LOW)&&(analog_reading<G_1_HIGH))
+	{
+		retVal=1;
+  ac:	81 e0       	ldi	r24, 0x01	; 1
+  ae:	d7 cf       	rjmp	.-82     	; 0x5e <calculateGearPosition+0x10>
+
+000000b0 <main>:
+
+	return retVal;
+}
+
+int main(void)
+{
+  b0:	ef 92       	push	r14
+  b2:	ff 92       	push	r15
+  b4:	0f 93       	push	r16
+  b6:	1f 93       	push	r17
+  b8:	cf 93       	push	r28
+  ba:	df 93       	push	r29
+	uint8_t lastAdcrunning=0;
+
+	//
+	// init IO ports
+	//
+	DDRB=0xff;
+  bc:	8f ef       	ldi	r24, 0xFF	; 255
+  be:	87 bb       	out	0x17, r24	; 23
+
+	adcInit();
+  c0:	aa d0       	rcall	.+340    	; 0x216 <adcInit>
+	startAdcSequence();
+  c2:	a7 d0       	rcall	.+334    	; 0x212 <startAdcSequence>
+
+	PORTB=ALL;
+  c4:	18 ba       	out	0x18, r1	; 24
+  c6:	80 e1       	ldi	r24, 0x10	; 16
+  c8:	97 e2       	ldi	r25, 0x27	; 39
+    milliseconds can be achieved.
+ */
+void
+_delay_loop_2(uint16_t __count)
+{
+	__asm__ volatile (
+  ca:	29 e1       	ldi	r18, 0x19	; 25
+  cc:	30 e0       	ldi	r19, 0x00	; 0
+  ce:	e2 2f       	mov	r30, r18
+  d0:	f3 2f       	mov	r31, r19
+  d2:	31 97       	sbiw	r30, 0x01	; 1
+  d4:	f1 f7       	brne	.-4      	; 0xd2 <main+0x22>
+  d6:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+  d8:	d1 f7       	brne	.-12     	; 0xce <main+0x1e>
+  da:	00 e0       	ldi	r16, 0x00	; 0
+  dc:	10 e0       	ldi	r17, 0x00	; 0
+  de:	e0 90 6a 00 	lds	r14, 0x006A
+  e2:	ca e6       	ldi	r28, 0x6A	; 106
+  e4:	d8 e1       	ldi	r29, 0x18	; 24
+			{
+				flash++;
+			}
+			else
+			{
+				flash=0;
+  e6:	ff 24       	eor	r15, r15
+  e8:	f3 94       	inc	r15
+
+		value=calculateGearPosition(analog_result_16);
+
+		if((adcrunning!=lastAdcrunning) && flash && (value==10))
+		{
+			PORTB=(displayValue[value]&~DP_SEG);
+  ea:	8f e7       	ldi	r24, 0x7F	; 127
+  ec:	e8 22       	and	r14, r24
+  ee:	06 c0       	rjmp	.+12     	; 0xfc <__stack+0x1d>
+			lastAdcrunning=adcrunning;
+		}
+		else
+		{
+			PORTB=displayValue[value];
+  f0:	e8 2f       	mov	r30, r24
+  f2:	f0 e0       	ldi	r31, 0x00	; 0
+  f4:	e0 5a       	subi	r30, 0xA0	; 160
+  f6:	ff 4f       	sbci	r31, 0xFF	; 255
+  f8:	80 81       	ld	r24, Z
+  fa:	88 bb       	out	0x18, r24	; 24
+  fc:	8c 2f       	mov	r24, r28
+  fe:	9d 2f       	mov	r25, r29
+ 100:	01 97       	sbiw	r24, 0x01	; 1
+ 102:	f1 f7       	brne	.-4      	; 0x100 <__stack+0x21>
+			{
+				flash++;
+			}
+			else
+			{
+				flash=0;
+ 104:	1f 25       	eor	r17, r15
+//			{
+//				value=9;
+//			}
+//		}
+
+		value=calculateGearPosition(analog_result_16);
+ 106:	80 91 75 00 	lds	r24, 0x0075
+ 10a:	90 91 76 00 	lds	r25, 0x0076
+ 10e:	9f df       	rcall	.-194    	; 0x4e <calculateGearPosition>
+
+		if((adcrunning!=lastAdcrunning) && flash && (value==10))
+ 110:	90 91 77 00 	lds	r25, 0x0077
+ 114:	90 17       	cp	r25, r16
+ 116:	61 f3       	breq	.-40     	; 0xf0 <__stack+0x11>
+ 118:	11 23       	and	r17, r17
+ 11a:	51 f3       	breq	.-44     	; 0xf0 <__stack+0x11>
+ 11c:	8a 30       	cpi	r24, 0x0A	; 10
+ 11e:	41 f7       	brne	.-48     	; 0xf0 <__stack+0x11>
+		{
+			PORTB=(displayValue[value]&~DP_SEG);
+ 120:	e8 ba       	out	0x18, r14	; 24
+			lastAdcrunning=adcrunning;
+ 122:	00 91 77 00 	lds	r16, 0x0077
+ 126:	11 e0       	ldi	r17, 0x01	; 1
+ 128:	e9 cf       	rjmp	.-46     	; 0xfc <__stack+0x1d>
+
+0000012a <__vector_11>:
+volatile uint16_t average_chan0_tot=0;
+volatile uint8_t average_chan0_pos=0;
+volatile uint8_t flip=0;
+
+ISR(ADC_vect)
+{
+ 12a:	1f 92       	push	r1
+ 12c:	0f 92       	push	r0
+ 12e:	0f b6       	in	r0, 0x3f	; 63
+ 130:	0f 92       	push	r0
+ 132:	11 24       	eor	r1, r1
+ 134:	2f 93       	push	r18
+ 136:	3f 93       	push	r19
+ 138:	5f 93       	push	r21
+ 13a:	6f 93       	push	r22
+ 13c:	7f 93       	push	r23
+ 13e:	8f 93       	push	r24
+ 140:	9f 93       	push	r25
+ 142:	af 93       	push	r26
+ 144:	bf 93       	push	r27
+ 146:	ef 93       	push	r30
+ 148:	ff 93       	push	r31
+	uint8_t adlow;
+	uint8_t adhigh;
+
+	adlow = ADCL;
+ 14a:	84 b1       	in	r24, 0x04	; 4
+	adhigh = ADCH;
+ 14c:	95 b1       	in	r25, 0x05	; 5
+	analog_result_16 = ((adhigh<<8)|adlow);
+ 14e:	39 2f       	mov	r19, r25
+ 150:	20 e0       	ldi	r18, 0x00	; 0
+ 152:	90 e0       	ldi	r25, 0x00	; 0
+ 154:	82 2b       	or	r24, r18
+ 156:	93 2b       	or	r25, r19
+ 158:	90 93 76 00 	sts	0x0076, r25
+ 15c:	80 93 75 00 	sts	0x0075, r24
+	adcrunning++;
+ 160:	80 91 77 00 	lds	r24, 0x0077
+ 164:	8f 5f       	subi	r24, 0xFF	; 255
+ 166:	80 93 77 00 	sts	0x0077, r24
+		flip=0;
+	}
+*/
+
+	// calc average
+	average_chan0_tot+=analog_result_16;
+ 16a:	20 91 78 00 	lds	r18, 0x0078
+ 16e:	30 91 79 00 	lds	r19, 0x0079
+ 172:	80 91 75 00 	lds	r24, 0x0075
+ 176:	90 91 76 00 	lds	r25, 0x0076
+ 17a:	82 0f       	add	r24, r18
+ 17c:	93 1f       	adc	r25, r19
+ 17e:	90 93 79 00 	sts	0x0079, r25
+ 182:	80 93 78 00 	sts	0x0078, r24
+	average_chan0_tot-=average_chan0[average_chan0_pos];
+ 186:	80 91 78 00 	lds	r24, 0x0078
+ 18a:	90 91 79 00 	lds	r25, 0x0079
+ 18e:	e0 91 7a 00 	lds	r30, 0x007A
+ 192:	f0 e0       	ldi	r31, 0x00	; 0
+ 194:	ee 0f       	add	r30, r30
+ 196:	ff 1f       	adc	r31, r31
+ 198:	e4 58       	subi	r30, 0x84	; 132
+ 19a:	ff 4f       	sbci	r31, 0xFF	; 255
+ 19c:	20 81       	ld	r18, Z
+ 19e:	31 81       	ldd	r19, Z+1	; 0x01
+ 1a0:	82 1b       	sub	r24, r18
+ 1a2:	93 0b       	sbc	r25, r19
+ 1a4:	90 93 79 00 	sts	0x0079, r25
+ 1a8:	80 93 78 00 	sts	0x0078, r24
+	average_chan0[average_chan0_pos]=analog_result_16;
+ 1ac:	e0 91 7a 00 	lds	r30, 0x007A
+ 1b0:	f0 e0       	ldi	r31, 0x00	; 0
+ 1b2:	80 91 75 00 	lds	r24, 0x0075
+ 1b6:	90 91 76 00 	lds	r25, 0x0076
+ 1ba:	ee 0f       	add	r30, r30
+ 1bc:	ff 1f       	adc	r31, r31
+ 1be:	e4 58       	subi	r30, 0x84	; 132
+ 1c0:	ff 4f       	sbci	r31, 0xFF	; 255
+ 1c2:	91 83       	std	Z+1, r25	; 0x01
+ 1c4:	80 83       	st	Z, r24
+	average_chan0_pos++;
+ 1c6:	80 91 7a 00 	lds	r24, 0x007A
+ 1ca:	8f 5f       	subi	r24, 0xFF	; 255
+ 1cc:	80 93 7a 00 	sts	0x007A, r24
+	if(average_chan0_pos==AVECOUNT)
+ 1d0:	80 91 7a 00 	lds	r24, 0x007A
+ 1d4:	82 33       	cpi	r24, 0x32	; 50
+ 1d6:	11 f4       	brne	.+4      	; 0x1dc <__vector_11+0xb2>
+	{
+		average_chan0_pos=0;
+ 1d8:	10 92 7a 00 	sts	0x007A, r1
+	}
+
+	analog_result_16=average_chan0_tot/AVECOUNT;
+ 1dc:	80 91 78 00 	lds	r24, 0x0078
+ 1e0:	90 91 79 00 	lds	r25, 0x0079
+ 1e4:	62 e3       	ldi	r22, 0x32	; 50
+ 1e6:	70 e0       	ldi	r23, 0x00	; 0
+ 1e8:	1d d0       	rcall	.+58     	; 0x224 <__udivmodhi4>
+ 1ea:	70 93 76 00 	sts	0x0076, r23
+ 1ee:	60 93 75 00 	sts	0x0075, r22
+}
+ 1f2:	ff 91       	pop	r31
+ 1f4:	ef 91       	pop	r30
+ 1f6:	bf 91       	pop	r27
+ 1f8:	af 91       	pop	r26
+ 1fa:	9f 91       	pop	r25
+ 1fc:	8f 91       	pop	r24
+ 1fe:	7f 91       	pop	r23
+ 200:	6f 91       	pop	r22
+ 202:	5f 91       	pop	r21
+ 204:	3f 91       	pop	r19
+ 206:	2f 91       	pop	r18
+ 208:	0f 90       	pop	r0
+ 20a:	0f be       	out	0x3f, r0	; 63
+ 20c:	0f 90       	pop	r0
+ 20e:	1f 90       	pop	r1
+ 210:	18 95       	reti
+
+00000212 <startAdcSequence>:
+
+void startAdcSequence()
+{
+	/* start first convertion*/
+	ADCSR |= (1<<ADSC);
+ 212:	36 9a       	sbi	0x06, 6	; 6
+}
+ 214:	08 95       	ret
+
+00000216 <adcInit>:
+
+void adcInit()
+{
+	/*choose the ADC chanel and standard voltage source*/
+	/*use adc4 and internal 1.1v voltage.*/
+	ADMUX = ((1<<REFS0)|0x00); // AVCC reference voltage, channel ADC0
+ 216:	80 e4       	ldi	r24, 0x40	; 64
+ 218:	87 b9       	out	0x07, r24	; 7
+  
+	/*adc control: prescaler, clear ADIF, interrupt enable, etc*/
+	/* ADC prescaler: 
+	f_adc=f_osc/128=8e6/128 ~= 60KHz
+	*/
+	ADCSR = ((1<<ADEN)|(1<<ADIF)|(1<<ADIE)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0));
+ 21a:	8f e9       	ldi	r24, 0x9F	; 159
+ 21c:	86 b9       	out	0x06, r24	; 6
+
+	/*auto trigger enable*/
+	ADCSR |= (1<<ADFR);
+ 21e:	35 9a       	sbi	0x06, 5	; 6
+	see datasheet p231(Chinese version) for details.
+	*/
+	///////// ADCSRB &= ~((1<<ADTS2)|(1<<ADTS1)|(1<<ADTS0));
+    
+	/*enable interrupt*/
+	sei();
+ 220:	78 94       	sei
+
+	/*then, ADCSRA |= (1<<ADSC) can start convention.*/
+}
+ 222:	08 95       	ret
+
+00000224 <__udivmodhi4>:
+ 224:	aa 1b       	sub	r26, r26
+ 226:	bb 1b       	sub	r27, r27
+ 228:	51 e1       	ldi	r21, 0x11	; 17
+ 22a:	07 c0       	rjmp	.+14     	; 0x23a <__udivmodhi4_ep>
+
+0000022c <__udivmodhi4_loop>:
+ 22c:	aa 1f       	adc	r26, r26
+ 22e:	bb 1f       	adc	r27, r27
+ 230:	a6 17       	cp	r26, r22
+ 232:	b7 07       	cpc	r27, r23
+ 234:	10 f0       	brcs	.+4      	; 0x23a <__udivmodhi4_ep>
+ 236:	a6 1b       	sub	r26, r22
+ 238:	b7 0b       	sbc	r27, r23
+
+0000023a <__udivmodhi4_ep>:
+ 23a:	88 1f       	adc	r24, r24
+ 23c:	99 1f       	adc	r25, r25
+ 23e:	5a 95       	dec	r21
+ 240:	a9 f7       	brne	.-22     	; 0x22c <__udivmodhi4_loop>
+ 242:	80 95       	com	r24
+ 244:	90 95       	com	r25
+ 246:	68 2f       	mov	r22, r24
+ 248:	79 2f       	mov	r23, r25
+ 24a:	8a 2f       	mov	r24, r26
+ 24c:	9b 2f       	mov	r25, r27
+ 24e:	08 95       	ret
+
+00000250 <_exit>:
+ 250:	f8 94       	cli
+
+00000252 <__stop_program>:
+ 252:	ff cf       	rjmp	.-2      	; 0x252 <__stop_program>

@@ -1,0 +1,5 @@
+#/bin/bash
+
+rm -rf images/*.png compositortest.mp4
+./compositor
+avconv -r 25 -i images/output%08d.png -b:v 1000k compositortest.mp4

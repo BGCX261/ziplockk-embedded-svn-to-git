@@ -1,0 +1,350 @@
+#include <inttypes.h>
+#include <avr/io.h>
+#include <avr/pgmspace.h>
+#include <avr/eeprom.h>
+#include <avr/interrupt.h>
+#include <avr/signal.h>
+
+#define F_CPU			8000000
+#define BAUD_RATE		2400	
+#define T2RELOADVAL		-10
+#define TX_BUF_SIZE		32
+#define RX_BUF_SIZE		32
+
+volatile uint16_t tocker;
+volatile uint16_t pwmCount;
+volatile uint16_t pwmPos;
+volatile uint16_t clock;
+static uint8_t rxBuf[RX_BUF_SIZE];
+static volatile uint8_t rxHead;
+static volatile uint8_t rxTail;
+static volatile uint8_t rxCount;
+static volatile uint8_t sweep;
+static volatile uint8_t dir;
+static volatile uint8_t speed;
+
+#define CMDTIMEOUT		10000 // ticks
+#define CMDSCAN			0
+#define CMDBUILD		1
+
+#define MIN_PWM			50	
+#define MAX_PWM			180
+
+static uint8_t cmd[10];
+static volatile uint8_t cmdPos;
+static volatile uint8_t cmdState;
+static volatile uint8_t cmdTimeout;
+
+int putchar(int ch)
+{
+	while (!(UCSR0A & (1 << UDRE0)));
+	UDR0 = ch;
+	return ch;
+}
+
+int puts(char *s)
+{
+	while (*s)
+		putchar(*s++);
+	return 0;
+}
+
+int getch(void)
+{
+	while (!(UCSR0A & (1 << RXC0)));
+	return UDR0;
+}
+
+
+//
+// uses 16 bit timer 3
+//
+//
+// calc num of steps per uS, this will normally
+// be in the range 4-16
+//
+//
+/*
+#define STEPS	((uint16_t)((uint32_t) (F_CPU + 500000) / 1000000L))
+
+void delay(uint16_t us)
+{
+	us *= STEPS;
+	TCCR3B = 0;		// make sure timer is stopped
+	TCNT3 = -us;
+	ETIFR |= TOV3;	// clear flags
+	TCCR3B = 1;		// start timer, no prescaling
+	while (!(ETIFR & (1<<TOV3)));	// wait for it
+}
+
+void delayms(uint16_t ms)
+{
+	while (ms--)
+		delay(1000);
+}
+*/
+
+void pushRx(unsigned char data)
+{
+	if(rxCount<RX_BUF_SIZE)
+	{
+		rxBuf[rxHead++]=data;
+		rxHead%=RX_BUF_SIZE;
+		rxCount++;
+	}
+	else
+	{
+		PORTA|=0x02;
+	}
+}
+
+int popRx()
+{
+	volatile int retVal=-1;
+
+	if(rxCount) // not empty
+	{
+		retVal=rxBuf[rxTail++];
+		rxTail%=RX_BUF_SIZE;
+		rxCount--;
+	}
+
+	return retVal;
+}
+
+//
+// timer 2 interrupt
+// triggers every 10uS
+//
+SIGNAL(SIG_OVERFLOW2)
+{
+	TCNT2 = (uint8_t) T2RELOADVAL;	// reload
+
+	tocker++;
+
+	if(pwmCount==0)
+	{
+		PORTA|=0x04;
+	}
+	else if(pwmCount==pwmPos)
+	{
+		PORTA&=0xfb;
+	}
+
+	if(pwmCount==2000)
+	{
+		pwmCount=0;
+	}
+	else
+	{
+		pwmCount++;
+	}
+
+}
+
+SIGNAL(SIG_USART0_RECV)
+{
+	pushRx(UDR0);
+}
+
+int main(void)
+{
+	//
+	// setup USART
+	//
+	UBRR0L = (uint8_t)(F_CPU/(BAUD_RATE*16L)-1);
+	UBRR0H = (F_CPU/(BAUD_RATE*16L)-1) >> 8;
+	UCSR0A = 0x00;
+	UCSR0C = 0x86;
+	UCSR0B = _BV(TXEN0)|_BV(RXEN0)|_BV(RXCIE0);
+
+	//
+	// init IO ports
+	//
+	DDRA=0xFF;	// all outputs
+	PORTA=0x00;	// all off
+	DDRB=0x00;	// all inputs
+	PORTB=0xff;	// active pullups
+
+	//
+	// init Timer2 for 1 mS interrupts
+	//
+	
+	/*
+	 * 8000000Hz crystal
+	 * /8 (2) gives 1uS per count
+	 */
+	TCCR2 = 2;
+	TCNT2 = (uint8_t) T2RELOADVAL;
+	TIMSK |= (1<<TOIE2);
+
+
+	//
+	// init global variables
+	//
+	tocker=0;
+	clock=0;
+	rxHead=0;
+	rxTail=0;
+	rxCount=0;
+	cmdState=CMDSCAN;
+	pwmCount=0;
+	pwmPos=MIN_PWM;
+	sweep=0;
+	dir=1;
+	speed=1;
+
+	//
+	// enable global interrupts
+	//
+	sei();
+
+	//
+	// let loose
+	//
+	while (1)
+	{
+		// process periodics
+
+		if(tocker>=10000)
+		{
+			if(PORTA&0x01)
+			{
+				PORTA&=0xfe;
+			}
+			else
+			{
+				PORTA|=0x01;
+			}
+
+			if(sweep)
+			{
+				if(dir)
+				{
+					pwmPos+=speed;
+					if(pwmPos>=MAX_PWM)
+					{
+						dir=0;
+					}
+				}
+				else
+				{
+					pwmPos-=speed;
+					if(pwmPos<=MIN_PWM)
+					{
+						dir=1;
+					}
+				}
+			}
+	
+			tocker=0;
+		}
+		
+		// process serial data
+		
+		volatile int data=popRx();
+
+		if(data>=0)
+		{
+			// serial data to process
+			if(cmdState==CMDSCAN)
+			{
+				if(data=='+')
+				{
+					// found command start
+					cmdState=CMDBUILD;
+					clock=0;
+					cmdTimeout=0;
+					cmdPos=0;
+				}
+
+				putchar(data);
+			}
+			else if(cmdState==CMDBUILD)
+			{
+				if(cmdTimeout)
+				{
+					cmdState=CMDSCAN;
+					PORTA|=0x02;
+				}
+				else
+				{
+					if(data=='#')
+					{
+						// command complete
+						cmd[cmdPos]=0;
+						putchar('+');
+						puts(cmd);
+						putchar('#');
+						cmdState=CMDSCAN;	
+
+						if(cmd[0]=='+')
+						{
+							pwmPos+=5;
+						}
+						
+						if(cmd[0]=='-')
+						{
+							pwmPos-=5;
+						}
+
+						if(cmd[0]=='[')
+						{
+							pwmPos=0;
+						}
+
+						if(cmd[0]==']')
+						{
+							pwmPos=MAX_PWM;
+						}
+
+						if(cmd[0]=='S')
+						{
+							if(!sweep)
+							{
+								sweep++;
+							}
+							else
+							{
+								sweep=0;
+							}
+						}
+
+						if(cmd[0]=='{')
+						{
+							if(speed>0)
+							{
+								speed--;
+							}
+						}
+
+						if(cmd[0]=='}')
+						{
+							if(speed<10)
+							{
+								speed++;
+							}
+						}
+
+						if(pwmPos<MIN_PWM)
+						{
+							pwmPos=MIN_PWM;
+						}
+
+						if(pwmPos>MAX_PWM)
+						{
+							pwmPos=MAX_PWM;
+						}
+
+					}
+					else
+					{
+						cmd[cmdPos++]=data;
+					}
+				}
+			}		
+		}
+	}
+}
+
+
